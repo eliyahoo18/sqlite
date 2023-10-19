@@ -1,10 +1,9 @@
 /** ✨ **/
-#include "SqliteColumn.h"
+#include "Sqlite.h"
 
 
-fe::SqliteColumn::SqliteColumn(std::string name, std::string value, SqliteType type) : _name(std::move(name)),
-                                                                                       _value(std::move(value)),
-                                                                                       _type(type) {}
+fe::SqliteColumn::SqliteColumn(std::string name, std::string value)
+        : _name(std::move(name)), _value(std::move(value)) {}
 
 const std::string &fe::SqliteColumn::name() const {
     return _name;

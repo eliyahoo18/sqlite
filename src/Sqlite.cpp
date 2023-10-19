@@ -1,6 +1,5 @@
 /** ✨ **/
 #include "Sqlite.h"
-#include "SqliteExceptions.h"
 
 
 fe::Sqlite::Sqlite(const std::string &dbName) {
@@ -16,10 +15,10 @@ fe::Sqlite::~Sqlite() {
 }
 
 fe::Sqlite::Table fe::Sqlite::exec(const std::string &query) {
-    return exec(query, {});
+    return _exec(query, {});
 }
 
-fe::Sqlite::Table fe::Sqlite::exec(const std::string &query, const std::vector<std::string> &params) {
+fe::Sqlite::Table fe::Sqlite::_exec(const std::string &query, const std::vector<std::string> &params) {
     sqlite3_stmt *ppStmt;
 
     // prepare the sqlite query
@@ -68,8 +67,12 @@ fe::Sqlite::Table fe::Sqlite::exec(const std::string &query, const std::vector<s
     return results;
 }
 
-sqlite3_int64 fe::Sqlite::readLastInsertId() {
+sqlite3_int64 fe::Sqlite::lastInsertId() {
     return sqlite3_last_insert_rowid(_db);
+}
+
+std::vector<std::string>& fe::Sqlite::Formatter::args() {
+    return _args;
 }
 
 void fe::Sqlite::_throw_exception(sqlite3_stmt *pStmt, int sqliteCode) {
@@ -88,5 +91,6 @@ void fe::Sqlite::_throw_exception(sqlite3_stmt *pStmt, int sqliteCode) {
 
     throw SqliteException(err);
 }
+
 
 

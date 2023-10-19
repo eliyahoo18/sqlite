@@ -1,6 +1,7 @@
 /** ✨ **/
-#include "SqliteRow.h"
-#include "SqliteExceptions.h"
+#include <utility>
+
+#include "Sqlite.h"
 
 
 fe::SqliteRow &fe::SqliteRow::defineValue(std::string name, int value) {
@@ -16,7 +17,7 @@ fe::SqliteRow &fe::SqliteRow::defineValue(std::string name, const unsigned char 
 }
 
 fe::SqliteRow &fe::SqliteRow::defineValue(std::string name, std::string value, SqliteType type) {
-    _columns[std::move(name)] = {std::move(value), type};
+    _columns[std::move(name)] = std::move(value);
     return *this;
 }
 
@@ -24,6 +25,5 @@ fe::SqliteRow::Column fe::SqliteRow::operator[](const std::string &name) const {
     if (_columns.find(name) == _columns.end())
         throw SqliteSyntaxException("no such column '" + name + "'");
 
-    std::pair<std::string, SqliteType> column = _columns.at(name);
-    return {name, column.first, column.second};
+    return {name, _columns.at(name)};
 }
